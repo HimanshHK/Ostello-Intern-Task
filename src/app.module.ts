@@ -11,13 +11,16 @@ import { Product } from './product/product.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: 'dpg-cl1u1lbmgg9c73a7uq3g-a.oregon-postgres.render.com',
       port: 5432,
-      username: 'poll_user',
-      password: 'poll_password',
-      database: 'poll_db',
-      entities: [Poll,Product],
+      username: 'poll_database_123_user',
+      password: 'yUXGIq0fceuoPaea9MgvJSSZfAnhJgGe',
+      database: 'poll_database_123',
+      entities: [Poll, Product],
       synchronize: true,
+      extra: {
+        ssl: true, // Enable SSL
+      },
     }),
     TypeOrmModule.forFeature([Poll,Product]),
   ],
