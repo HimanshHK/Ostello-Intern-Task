@@ -4,8 +4,9 @@ import { Repository } from 'typeorm';
 import { CartItem } from './cart-item.entity';
 import { Cart } from './cart.entity';
 import { NotFoundException } from '@nestjs/common';
-import { AddProductToCartDto } from './dto';
-import { DeleteProductFromCartDto } from './dto';
+import { AddProductToCartDto } from './dto/add-product-dto';
+import { DeleteProductFromCartDto } from './dto/delete-product-dto';
+
 
 @Injectable()
 export class CartService {

@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get, Param,Delete } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { AddProductToCartDto } from './dto';
-import { DeleteProductFromCartDto } from './dto';
+import { AddProductToCartDto } from './dto/add-product-dto';
+import { DeleteProductFromCartDto } from './dto/delete-product-dto';
 import { ApiOperation, ApiTags, ApiParam,ApiBody  } from '@nestjs/swagger';
 
 @ApiTags('cart')
@@ -33,7 +33,7 @@ export class CartController {
     description: 'Add a new product to the cart specified by the provided cart ID.' 
   })
   @ApiParam({ name: 'cartId', description: 'ID of the cart to add the product to', type: 'number' })
-  @ApiBody({ type: AddProductToCartDto }) // Specify the request body DTO for Swagger documentation
+  @ApiBody({ type: AddProductToCartDto }) 
   async addProductToCart(@Param('cartId') cartId: number, @Body() dto: AddProductToCartDto) {
     const cartItem = await this.cartService.addProductToCart({ ...dto, cartId });
     return cartItem;
@@ -45,7 +45,7 @@ export class CartController {
     description: 'Delete a product from the cart specified by the provided cart ID.' 
   })
   @ApiParam({ name: 'cartId', description: 'ID of the cart to remove the product from', type: 'number' })
-  @ApiBody({ type: DeleteProductFromCartDto }) // Specify the request body DTO for Swagger documentation
+  @ApiBody({ type: DeleteProductFromCartDto }) 
   async deleteProductFromCart(@Param('cartId') cartId: number, @Body() dto: DeleteProductFromCartDto) {
     const cartItem = await this.cartService.deleteProductFromCart({ ...dto, cartId });
     return cartItem;

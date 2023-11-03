@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Param, NotFoundException } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
-import { CreateProductDto } from './create-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
 import { ApiTags, ApiResponse,ApiBody } from '@nestjs/swagger';
 
-@ApiTags('products') // Use the same tag as defined in the DocumentBuilder
+@ApiTags('products') 
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
@@ -27,9 +27,9 @@ export class ProductController {
   }
 
   @Post()
-  @ApiResponse({ status: 201, description: 'Product created.' }) // Use 201 for successful creation
+  @ApiResponse({ status: 201, description: 'Product created.' }) 
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiBody({ type: CreateProductDto }) // Use ApiBody to specify the request body
+  @ApiBody({ type: CreateProductDto }) 
   async createProduct(@Body() createProductDto: CreateProductDto): Promise<Product> {
     return this.productService.createProduct(createProductDto);
   }

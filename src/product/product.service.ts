@@ -1,11 +1,9 @@
-// product/product.service.ts
-
-import { Injectable,InternalServerErrorException  } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { NotFoundException } from '@nestjs/common';
-import { CreateProductDto } from './create-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -24,7 +22,9 @@ export class ProductService {
 
   async getProductById(productId: number): Promise<Product> {
     try {
-      return await this.productRepository.findOneOrFail({ where: { id: productId } });
+      return await this.productRepository.findOneOrFail({
+        where: { id: productId },
+      });
     } catch (error) {
       throw new NotFoundException(`Product with ID ${productId} not found.`);
     }
@@ -45,4 +45,3 @@ export class ProductService {
     }
   }
 }
-
