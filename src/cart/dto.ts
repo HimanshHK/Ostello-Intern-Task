@@ -26,6 +26,8 @@ export class AddProductToCartDto {
     @IsNotEmpty()
     @IsInt()
     quantity: number;
+
+    
 }
   
   
