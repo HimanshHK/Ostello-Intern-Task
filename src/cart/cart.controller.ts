@@ -1,8 +1,10 @@
-import { Controller, Post, Body, Get, Param,Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param,Res,HttpStatus } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { AddProductToCartDto } from './dto/add-product-dto';
 import { DeleteProductFromCartDto } from './dto/delete-product-dto';
-import { ApiOperation, ApiTags, ApiParam,ApiBody  } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiParam,ApiBody,ApiResponse  } from '@nestjs/swagger';
+import { Cart } from './cart.entity';
+import { CartItem } from './cart-item.entity';
 
 @ApiTags('cart')
 @Controller('cart')
@@ -11,9 +13,15 @@ export class CartController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new cart', description: 'Creates a new shopping cart.' })
-  async createCart() {
-    const cart = await this.cartService.createCart();
-    return cart;
+  @ApiResponse({ status: 201, description: 'Cart created successfully' })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  async createCart(@Res() response): Promise<void> {
+    try {
+      const cart: Cart = await this.cartService.createCart();
+      response.status(HttpStatus.CREATED).json({ message: 'Cart created successfully', data: cart });
+    } catch (error) {
+      response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error', message: error.message });
+    }
   }
 
   @Get(':cartId')
@@ -22,9 +30,20 @@ export class CartController {
     description: 'Retrieve cart items based on the provided cart ID.' 
   })
   @ApiParam({ name: 'cartId', description: 'ID of the cart to retrieve items from', type: 'number' })
-  async getCartContents(@Param('cartId') cartId: number) {
-    const cartItems = await this.cartService.getCartContents(cartId);
-    return cartItems;
+  @ApiResponse({ status: 200, description: 'Cart items retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Cart not found' })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  async getCartContents(@Param('cartId') cartId: number, @Res() response): Promise<void> {
+    try {
+      const cartItems: CartItem[] = await this.cartService.getCartContents(cartId);
+      if (cartItems) {
+        response.status(HttpStatus.OK).json({ message: 'Cart items retrieved successfully', data: cartItems });
+      } else {
+        response.status(HttpStatus.NOT_FOUND).json({ error: 'Cart not found', message: `Cart with ID ${cartId} not found` });
+      }
+    } catch (error) {
+      response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error', message: error.message });
+    }
   }
 
   @Post(':cartId/add-product')

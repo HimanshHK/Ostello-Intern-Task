@@ -9,6 +9,10 @@ import { Cart } from './cart/cart.entity';
 import { CartService } from './cart/cart.service';
 import { CartController } from './cart/cart.controller';
 import { CartItem } from './cart/cart-item.entity';
+import { Auth } from './auth/auth.entity';
+import { AuthService } from './auth/auth.service';
+import { AuthController } from './auth/auth.controller';
+
 
 
 @Module({
@@ -20,16 +24,16 @@ import { CartItem } from './cart/cart-item.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Product, Cart, CartItem],
+      entities: [Product, Cart, CartItem,Auth],
       synchronize: true,
       extra: {
         ssl: true,
       },
     }),
-    TypeOrmModule.forFeature([Product, Cart, CartItem]),
+    TypeOrmModule.forFeature([Product, Cart, CartItem,Auth]),
   ],
-  providers: [ProductService, CartService, AppService],
-  controllers: [ProductController, CartController, AppController],
+  providers: [ProductService, CartService, AppService,AuthService],
+  controllers: [ProductController, CartController, AppController,AuthController],
 })
 
 
