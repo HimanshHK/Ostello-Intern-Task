@@ -1,37 +1,34 @@
-import { Controller, Post, Body, Patch, Delete, Get, Param, NotFoundException, ParseIntPipe } from '@nestjs/common'; // Added ParseIntPipe for parameter validation
+import { Controller, Post, Body, Get, Param,Delete } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { CreateCartDto, AddProductToCartDto, UpdateCartItemQuantityDto } from './dto';
-import { ConflictException } from '@nestjs/common';
+import { AddProductToCartDto } from './dto';
+import { DeleteProductFromCartDto } from './dto';
 
 @Controller('cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Post()
-  async createCart(@Body() createCartDto: CreateCartDto) {
-    
-  }
-
-  @Post('add-product')
-  async addProductToCart(@Body() addProductToCartDto: AddProductToCartDto) {
-    
-  }
-
-  @Patch('update-product-quantity/:cartItemId')
-  async updateCartItemQuantity(
-    @Param('cartItemId', ParseIntPipe) cartItemId: number, // Validate cartItemId as integer
-    @Body() updateQuantityDto: UpdateCartItemQuantityDto
-  ) {
-    
-  }
-
-  @Delete('remove-product/:cartItemId')
-  async removeProductFromCart(@Param('cartItemId', ParseIntPipe) cartItemId: number) {
-    
+  async createCart() {
+    const cart = await this.cartService.createCart();
+    return cart;
   }
 
   @Get(':cartId')
-  async getCartContents(@Param('cartId', ParseIntPipe) cartId: number) {
-
+  async getCartContents(@Param('cartId') cartId: number) {
+    const cartItems = await this.cartService.getCartContents(cartId);
+    return cartItems;
   }
+
+  @Post(':cartId/add-product')
+  async addProductToCart(@Param('cartId') cartId: number, @Body() dto: AddProductToCartDto) {
+    const cartItem = await this.cartService.addProductToCart({ ...dto, cartId });
+    return cartItem;
+  }
+
+  @Post(':cartId/delete-product')
+  async deleteProductFromCart(@Param('cartId') cartId: number, @Body() dto: DeleteProductFromCartDto) {
+    const cartItem = await this.cartService.deleteProductFromCart({ ...dto, cartId });
+    return cartItem;
+  }
+
 }

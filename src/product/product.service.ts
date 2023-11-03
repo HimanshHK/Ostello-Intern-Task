@@ -1,6 +1,6 @@
 // product/product.service.ts
 
-import { Injectable } from '@nestjs/common';
+import { Injectable,InternalServerErrorException  } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './product.entity';
@@ -15,26 +15,34 @@ export class ProductService {
   ) {}
 
   async getAllProducts(): Promise<Product[]> {
-    return this.productRepository.find();
+    try {
+      return await this.productRepository.find();
+    } catch (error) {
+      throw new InternalServerErrorException('Error retrieving products.');
+    }
   }
 
   async getProductById(productId: number): Promise<Product> {
     try {
-        return await this.productRepository.findOneOrFail({ where: { id: productId } });
+      return await this.productRepository.findOneOrFail({ where: { id: productId } });
     } catch (error) {
       throw new NotFoundException(`Product with ID ${productId} not found.`);
     }
+  }
+
+  async createProduct(createProductDto: CreateProductDto): Promise<Product> {
+    try {
+      const { name, description, price, imageURL } = createProductDto;
+      const product = this.productRepository.create({
+        name,
+        description,
+        price,
+        imageURL,
+      });
+      return await this.productRepository.save(product);
+    } catch (error) {
+      throw new InternalServerErrorException('Error creating product.');
     }
-
-    async createProduct(createProductDto: CreateProductDto): Promise<Product> {
-        const { name, description, price, imageURL } = createProductDto;
-        const product = this.productRepository.create({
-            name,
-            description,
-            price,
-            imageURL,
-        });
-        return await this.productRepository.save(product);
-        }
-
+  }
 }
+

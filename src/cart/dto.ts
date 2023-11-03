@@ -1,16 +1,34 @@
+import { IsNumberString, IsNotEmpty, IsInt } from 'class-validator';
+
 export class CreateCartDto {
     userId: number;
 }
 
-export class AddProductToCartDto {
+export class DeleteProductFromCartDto{
+    @IsNotEmpty()
+    @IsInt()
+    cartId: number;
+
+    @IsNotEmpty()
+    @IsInt()
     productId: number;
-    quantity: number;
 }
 
+export class AddProductToCartDto {
+    @IsNotEmpty()
+    @IsInt()
+    cartId: number;
 
+    @IsNotEmpty()
+    @IsInt()
+    productId: number;
+
+    @IsNotEmpty()
+    @IsInt()
+    quantity: number;
+}
+  
+  
 export class UpdateCartItemQuantityDto {
     quantity: number;
 }
-
-
-  

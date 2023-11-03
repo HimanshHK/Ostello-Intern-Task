@@ -1,14 +1,13 @@
-// cart.entity.ts
-import { Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { CartItem } from './cart-item.entity';
+import { Entity, PrimaryGeneratedColumn, OneToMany,Column } from 'typeorm';
+import { CartItem } from './cart-item.entity'; // Import CartItem entity
+// import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class Cart {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // Define any other fields specific to your Cart entity, such as userId
-
-  @OneToMany(() => CartItem, cartItem => cartItem.cart, { eager: true })
+  @Column({ type: 'jsonb', nullable: true, default: [] })
   cartItems: CartItem[];
 }
+
